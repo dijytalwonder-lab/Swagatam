@@ -1,0 +1,548 @@
+================================================================================
+ SWAGATAM - Schedule once, celebrate forever
+ ART ASSET PROMPTS BY PAGE  -  WARM FESTIVE "STORYBOOK CUTE" STYLE
+================================================================================
+
+WHAT THIS IS
+Swagatam is a festival status-poster maker for businesses and influencers
+(WhatsApp Status size, English + Hindi). Today every screen is drawn in code
+(CSS gradients, emoji, a few game illustrations). This file lists the art to
+generate so each page can look rich and branded. Each prompt has a [key], a size
+and a ready-to-paste prompt. Generate, save as shown, then tell me and I will wire
+the images into the app (the build script already converts PNG -> small WebP).
+
+STYLE (same family as Diwali Delivery Dash / Little Krishna / Dashavatara)
+Glossy cartoon-storybook art: soft rounded shapes, thick clean outlines, soft
+cel shading with a bright top-left highlight, jewel-bright festival colours,
+tiny sparkles, cheerful and welcoming. Cute but respectful - never mocking of
+any deity, faith or community. Mobile-game polish.
+
+BRAND PALETTE (anchor every prompt to these)
+  Deep plum ........ #4a1250 / #2b0833      Marigold ........ #f59e0b / #ffb703
+  Magenta-plum ..... #7a1d6f                Saffron-orange .. #f97316
+  Cream paper ...... #fff7ea                Rose ............ #c2185b
+  Antique gold ..... #d4a017 / #f6e7a8      Success green ... #12a38a
+  (In-app text uses the font "Baloo 2" and is drawn by the app, so NO LETTERING
+   goes inside any image.)
+
+GLOBAL TAIL - paste this at the end of EVERY prompt
+"Glossy cartoon storybook style, thick clean outlines, soft cel shading with a top-left
+highlight, saffron / marigold / deep-plum / gold palette with jewel accents, cheerful
+and welcoming. No text, no letters, no numbers, no watermark, no baked drop shadow."
+
+TRANSPARENCY - IMPORTANT (lesson from the game assets)
+Several earlier PNGs had a grey/white CHECKERBOARD painted into the pixels instead of
+real transparency, which shows up as boxes in the app. For every "transparent" asset:
+  - export a real alpha PNG, OR
+  - ask for "isolated on a flat pure-magenta #FF00FF background, nothing else in the
+    frame" and I will key it out, OR
+  - ask for "isolated on pure white" only for items with no white in them.
+Never accept an image that shows a checker pattern. Full-screen backgrounds are
+opaque and need no transparency.
+
+GLOBAL RULES
+- Portrait phone app. Full-screen art is 1080x1920 (9:16). On a phone it is shown
+  at about 360x640 CSS px, so keep details bold; nothing important smaller than ~40 px.
+- Leave the top ~110 px (status bar) and bottom ~150 px (navigation) free of key detail.
+- Keep large calm areas where the app places text and buttons (marked "EMPTY ZONE").
+- Light comes from the top-left. Rounded corners everywhere. No hard black outlines
+  on UI parts: use a deep-plum (#2b0833) outline instead.
+- Every asset must work on both cream (#fff7ea) and deep-plum (#2b0833) unless it
+  is a full background.
+- Folder suggestion: www/img/ui/<key>.png (screens), www/img/art/<key>.png (festival
+  art), www/img/poster/<key>.png (poster parts).
+
+================================================================================
+ 0. APP-WIDE ASSETS
+================================================================================
+
+[app_icon]  1024x1024  - launcher icon
+"A glowing marigold flower in full bloom, two layers of petals (outer saffron-orange,
+inner golden-yellow), a cream centre with a small rose-pink dot, centred on a rounded-
+square deep plum (#7a1d6f to #2b0833) radial burst with tiny gold sparkles. Bold,
+simple, readable at 48 px. No text." + GLOBAL TAIL
+
+[app_icon_foreground]  1024x1024  - Android adaptive icon (safe zone = central 66%)
+"The same marigold flower alone, transparent background, centred and sized to fit
+inside the central 66% circle, thick plum outline, soft glow." + GLOBAL TAIL
+
+[notif_icon]  96x96  - status-bar notification icon (MUST be flat white)
+"A single solid WHITE silhouette of an eight-petal marigold flower with a round
+centre, no colour, no gradient, no outline, transparent background."
+
+[logo_mark]  1024x1024  - transparent
+"Marigold flower emblem (same as the app icon) without the rounded-square tile,
+with a small gold toran garland arc over the top. Transparent background."
++ GLOBAL TAIL
+
+[splash]  1080x1920  - native launch screen
+"Deep plum night sky (#2b0833 to #7a1d6f radial), the marigold emblem glowing in the
+exact centre (about 360 px wide) with a soft gold halo, a thin garland of marigolds
+along the very top edge, drifting golden sparkles and a few tiny diyas floating up.
+EMPTY ZONE: bottom third stays calm." + GLOBAL TAIL
+
+================================================================================
+ 1. SPLASH + SIGN-IN  (screen "auth": register with mobile number, then OTP)
+================================================================================
+Layout today: dark plum screen, garland strip on top, big logo + "Swagatam" +
+tagline in the middle, cream bottom sheet holding the mobile / OTP field + button.
+
+[auth_bg]  1080x1920
+"Festival night backdrop for a welcome screen. Deep plum to magenta radial glow in the
+upper middle, a giant faint rangoli mandala (white, 10% opacity) behind the centre,
+soft bokeh lights like distant diyas, drifting marigold petals and gold sparkles.
+EMPTY ZONE: centre (logo + title) and the lower 40% (a cream sheet slides over it)."
++ GLOBAL TAIL
+
+[toran]  2160x240  - tileable horizontally, transparent
+"A festive toran garland strip hanging from the top: three scalloped swags of
+alternating orange and yellow marigold blossoms, with short hanging strands of
+marigold beads ending in tiny gold bells between the swags. Seamless left-right."
++ GLOBAL TAIL
+
+[auth_mascot]  800x800  - transparent (welcome character, optional)
+"A friendly chibi mascot welcoming the user: a cute round-faced character in a
+saffron kurta with palms pressed together in namaste, a marigold garland around the
+neck, big sparkly eyes, warm smile, tiny floating diya above one hand. Front view."
++ GLOBAL TAIL
+
+[sheet_edge]  1080x120  - transparent, tileable
+"The decorated top edge of a cream bottom sheet: a gentle scalloped lip in cream
+(#fff7ea) with a thin antique-gold line and tiny gold dots along it, a soft shadow
+above. Seamless left-right."
+
+[btn_primary]  900x180  - transparent, 9-slice friendly
+"A glossy pill button, marigold (#ffb703) to saffron-orange (#f97316) gradient,
+soft white highlight along the top edge, subtle inner bevel, no text. Flat centre
+so text can sit on it."
+
+[field_frame]  900x168  - transparent, 9-slice friendly
+"A rounded input-field frame: white fill, a thin warm-sand (#f0e3d0) border, tiny
+gold corner dots. Empty inside."
+
+================================================================================
+ 2. ONBOARDING - "WHAT WE OFFER"  (screen "offer": four benefits + Start free trial)
+================================================================================
+Layout today: cream page, title, four white cards (icon + heading + line), bottom
+button "Start free trial".
+
+[offer_header]  1080x420  - transparent or cream
+"Cheerful header illustration for the top of a cream page: a row of three mini festival
+posters fanned like cards (one Diwali, one Holi, one Christmas), garland across the top,
+sparkles. EMPTY ZONE: lower 40% for the title." + GLOBAL TAIL
+
+Four benefit icons, each 256x256, transparent, centred, shown on a soft cream chip:
+[offer_icon_posters]  "A stack of glossy festival poster cards (the front one shows a
+                       diya), tiny sparkles."
+[offer_icon_schedule] "A cute alarm clock wearing a small marigold garland, a calendar
+                       page behind it with a circular arrow (repeats every year)."
+[offer_icon_brand]    "A luxurious gold name tag / shop sign with a small storefront
+                       awning and a star, no lettering."
+[offer_icon_language] "Two speech bubbles side by side, one warm orange, one plum, with
+                       a tiny globe between them (two languages), no lettering."
+(+ GLOBAL TAIL on each)
+
+[offer_bg_corners]  1080x1920 - transparent
+"Corner ornaments only: faint rangoli quarter-mandalas in the top-right and bottom-left
+corners in light gold-cream, 15% opacity, rest fully transparent."
+
+================================================================================
+ 3. PROFILE SETUP  (screen "profile-setup": Personal / Business buttons + name fields)
+================================================================================
+
+[setup_header]  1080x360
+"A welcoming profile-setup banner: a warm cream sky, a rising sun made of marigold
+petals, a tiny garland, two chibi figures waving (one with a briefcase, one with a
+phone camera). EMPTY ZONE: bottom 50%." + GLOBAL TAIL
+
+[type_personal_icon]  256x256 - transparent
+"A cute influencer character holding up a smartphone with a heart and star floating
+out of the screen, saffron top, big smile, front view." + GLOBAL TAIL
+
+[type_business_icon]  256x256 - transparent
+"A cute little shop with a scalloped striped awning in marigold and plum, a hanging
+lantern, a tiny open sign (no lettering), a gold coin and a flower pot by the door."
++ GLOBAL TAIL
+
+[type_btn_on / type_btn_off]  1000x150 each - transparent
+"Segmented-control button background. ON: deep plum (#4a1250) rounded rectangle with
+a soft glow and thin gold edge. OFF: white rounded rectangle, sand border. No text."
+
+================================================================================
+ 4. HOME / LANDING  (screen "home": greeting, Upcoming holidays, Your set status)
+================================================================================
+
+[home_bg]  1080x1920
+"Very light cream paper (#fff7ea) with a subtle woven pattern, a faint marigold petal
+cluster in the top-right corner and a few soft gold sparkles. Extremely calm so
+cards and text stay readable." + GLOBAL TAIL
+
+[avatar_frame]  300x300 - transparent
+"A round avatar frame: a ring of small marigold flowers with a thin gold inner edge,
+empty circular centre (transparent) where the logo or initial is placed."
+
+[badge_pro]  320x120 - transparent
+"A small glossy pill badge with a tiny golden crown on the left, marigold gradient,
+white shine, empty on the right for text."
+[badge_trial] same size, plum pill with a gold clock icon on the left.
+[badge_free]  same size, soft sand pill with a tiny leaf icon.
+
+[holiday_card_bg]  600x800  (4 variants: warm / pink / blue / green) - opaque rounded
+"Background plate for an 'upcoming holiday' card: rich gradient (warm = deep red to
+orange; pink = plum to rose; blue = navy to sky; green = forest to teal), a soft
+mandala watermark in the corner, tiny sparkles, glossy top-left highlight. EMPTY ZONE:
+bottom half for the festival name and date."
+
+[today_banner]  1000x300 - opaque rounded
+"A celebratory 'happening today' banner: radiant gold rays from the left, confetti and
+streamers, a ribbon along the top edge, deep plum to magenta base. EMPTY ZONE: right
+60%."
+
+[empty_home]  600x600 - transparent  (shown when nothing is scheduled)
+"A cute diya character with a tiny sleepy face sitting beside a calendar page and a
+small alarm bell, waiting patiently, soft glow, a few sparkles."
++ GLOBAL TAIL
+
+Bottom navigation (each 160x160, transparent, filled glossy glyph; ACTIVE = marigold-
+orange gradient with plum outline, INACTIVE = soft grey-mauve #a8999d):
+[nav_home_on / nav_home_off]         "A rounded little house with a door."
+[nav_calendar_on / nav_calendar_off] "A calendar page with two binder rings and a star."
+[nav_profile_on / nav_profile_off]   "A friendly person bust, round head and shoulders."
+
+[nav_bar_bg]  1080x240 - transparent
+"The bottom navigation bar: white rounded-top panel (30 px radius) with a soft upward
+shadow and a very thin gold line on the top edge. Empty."
+
+================================================================================
+ 5. FESTIVAL LIST  (screen "festivals": filter chips + rows with a toggle)
+================================================================================
+
+[list_header]  1080x300
+"A slim festive header strip: cream with a garland of marigolds sagging across the top
+and tiny diya lights. EMPTY ZONE: lower 60% for the title and filter chips."
+
+[chip_on / chip_off]  420x120 - transparent rounded pill (plum ON, white OFF).
+
+[toggle_on / toggle_off]  208x120 - transparent
+"A glossy sliding switch. ON: green (#12a38a) track, white round knob with a tiny
+diya flame on it. OFF: sand track, plain white knob."
+
+[row_card]  1000x200 - transparent
+"A list row card: white, 20 px radius, very soft plum shadow, a faint gold dot pattern
+along the right edge. Empty."
+
+[add_event_card]  1000x200 - transparent
+"A dashed warm-sand border card with a gold plus-in-a-circle on the left, empty
+right side."
+
+CUSTOM-EVENT ICONS (for "Add your own event"), 256x256 each, transparent:
+[ev_cake] birthday cake with a candle      [ev_shop] shop with awning
+[ev_cart] shopping bag with a tag          [ev_ring] two gold wedding rings
+[ev_cap]  graduation cap                   [ev_trophy] golden trophy
+[ev_star] glowing star                     [ev_gift] gift box with ribbon
+[ev_heart] shiny heart                     [ev_party] party popper with confetti
+(+ GLOBAL TAIL on each)
+
+---- FESTIVAL HERO ART --------------------------------------------------------
+Used inside the poster circle / arch / frame and on festival cards. 1024x1024
+(portrait subjects 768x1024), centred, transparent, ONE main subject plus a few
+small accents. Already done (do not redo): diya, pot-gold, treasure, marigold,
+ganesha, krishna, matsya, kurma, bunny, fairy, tree.
+FAITH NOTE: for Eid, Guru Nanak Jayanti and Buddha Purnima show symbols only (crescent,
+lantern, mosque, khanda, lotus) - no depiction of the Prophet or the Gurus. Deities
+are drawn serene and respectful, never comic.
+
+[hero_new-year]         "Burst of golden fireworks over a tiny clock striking twelve, confetti."
+[hero_makar-sankranti]  "Three colourful kites with swirling strings, a sun, a sesame-laddu plate."
+[hero_pongal]           "A clay pot of boiling milk-rice overflowing with foam, sugarcane stalks, a kolam."
+[hero_republic-day]     "Ashoka Chakra (24 spokes, navy) on a tricolour ribbon, a tiny marching parade drum."
+[hero_valentines]       "Two glossy hearts entwined with a rose and a tiny cupid arrow."
+[hero_maha-shivaratri]  "A Shiva linga with a crescent moon, three white ash lines, bilva leaves, a trident."
+[hero_womens-day]       "A strong, graceful chibi woman raising a bouquet, a venus symbol in the sparkles."
+[hero_holi]             "A pichkari water gun and a bowl of bright colour powders bursting into a rainbow cloud."
+[hero_ugadi]            "A decorated neem-and-mango-leaf toran with a pot of six-taste pachadi."
+[hero_eid-fitr]         "A glowing crescent moon and star above an ornate lantern and a small mosque dome."
+[hero_ram-navami]       "A golden bow with a single arrow, a lotus and a small temple-flag (no human face)."
+[hero_mahavir-jayanti]  "A calm lotus with the Jain hand symbol (ahimsa) in a gold ring."
+[hero_hanuman-jayanti]  "A golden gada (mace) with a glowing saffron flag and a small rising sun."
+[hero_baisakhi]         "A sheaf of golden wheat with a dhol drum and a turban-coloured ribbon."
+[hero_akshaya-tritiya]  (done: treasure)
+[hero_labour-day]       "A chunky spanner and hammer crossed over a gear with a golden star."
+[hero_buddha-purnima]   "A full moon above a glowing lotus and a bodhi leaf, soft candlelight."
+[hero_mothers-day]      "A bouquet of pink flowers tied with a ribbon beside a cute heart-shaped card."
+[hero_eid-adha]         "A glowing crescent and star over a gold-trimmed lamp and dates on a plate."
+[hero_fathers-day]      "A cute tie and a coffee mug with a heart on it, a small gold star."
+[hero_raksha-bandhan]   "A beautiful rakhi (embroidered thread bracelet with a gold pendant) on a thali with sweets and rice."
+[hero_friendship-day]   "Two friendship bands overlapping with a heart charm and sparkles."
+[hero_independence-day] "A fluttering tricolour flag on a pole with a spinning Ashoka Chakra and a dove."
+[hero_onam]             "A circular pookalam flower carpet with an oil lamp, and a tiny snake-boat."
+[hero_teachers-day]     "A stack of books with a golden apple, a ruler and a small lamp of knowledge."
+[hero_gandhi-jayanti]   "A pair of round glasses, a walking stick and a small spinning wheel (charkha)."
+[hero_navratri]         "A pair of decorated dandiya sticks crossed over a glowing garba lamp pot."
+[hero_dussehra]         "A grand bow and arrow in front of a rising sun and a ten-sided golden crest."
+[hero_karwa-chauth]     "A decorated karwa pot with a sieve, a diya and a full moon peeking through."
+[hero_bhai-dooj]        "A puja thali with a red tilak, rice, a diya and sweets, a small marigold garland."
+[hero_chhath]           "A bamboo soop basket holding fruits and a lit diya in front of a rising sun over water."
+[hero_childrens-day]    (done: fairy)  [hero_easter] (done: bunny)
+[hero_guru-nanak]       "A radiant khanda emblem in a gold ring surrounded by soft light rays."
+[hero_christmas]        "A glowing decorated Christmas tree with a star, gifts and a tiny snow-globe feel." (current tree art can be replaced)
+[hero_new-years-eve]    "A champagne-style toast of two glasses with golden bubbles and a sparkler."
+(+ GLOBAL TAIL on each)
+
+================================================================================
+ 6. CALENDAR  (screen "calendar": month grid, day list)
+================================================================================
+
+[cal_header]  1080x260
+"A month-header banner: cream with a delicate gold rangoli border along the bottom, a
+tiny diya at each end. EMPTY ZONE: centre for the month name and arrows."
+
+[cal_day]       200x200 - transparent: white rounded square, soft shadow.
+[cal_day_sel]   200x200 - transparent: deep plum rounded square with a thin gold edge and glow.
+[cal_day_today] 200x200 - transparent: white rounded square with a marigold-orange ring.
+[cal_dot_event] 48x48  - transparent: small sand-grey diya-shaped dot.
+[cal_dot_set]   48x48  - transparent: small green (#12a38a) glowing diya-shaped dot.
+
+[cal_empty]  600x600 - transparent  (a day with no festival)
+"A tiny cute diya character holding a plus sign, with a calendar page behind, inviting,
+soft sparkle." + GLOBAL TAIL
+
+[arrow_prev / arrow_next]  128x128 - transparent: chunky rounded plum chevron in a
+cream circle.
+
+================================================================================
+ 7. PROFILE  (screen "me": plan card, your details, brand logo, Log out / Clear data)
+================================================================================
+
+[profile_bg]  1080x1920
+"Cream paper with a soft plum-to-cream gradient wash in the top 25% and a faint
+rangoli corner. Calm." + GLOBAL TAIL
+
+[avatar_big_frame]  400x400 - transparent
+"A large round avatar frame: ring of marigold flowers and a gold inner edge, small
+camera badge at the bottom-right, empty circular centre."
+
+[plan_card_bg]  1000x340 - opaque rounded
+"Premium plan card background: deep plum to magenta gradient, a subtle gold paisley
+pattern, shining diagonal sweep, a golden crown outline watermark on the right, EMPTY
+ZONE: left 65% for text and a button." + GLOBAL TAIL
+
+[logo_placeholder]  400x400 - transparent
+"A dashed rounded-square upload frame with a soft marigold plus sign and a tiny image
+icon (mountain + sun), friendly and empty." + GLOBAL TAIL
+
+[btn_logout_icon]  128x128 - transparent: a rounded door with an arrow leaving it, plum.
+[btn_clear_icon]   128x128 - transparent: a tidy broom sweeping a few sparkles, rose-red.
+
+[time_icon]  128x128 - transparent: a tiny bell with a clock face (reminder time).
+
+================================================================================
+ 8. SET STATUS / CONFIGURATION  (screen "config": preview + date, template, photo,
+    brand, greeting)
+================================================================================
+
+[phone_frame]  760x1360 - transparent centre
+"A modern phone frame seen from the front: thin plum bezel, rounded 60 px corners, a
+tiny camera dot, subtle glass reflection in the top-left. The screen area is fully
+transparent and exactly 9:16 so a poster shows through. Soft purple glow behind."
+
+[tpl_card_on / tpl_card_off]  240x420 - transparent
+"Template thumbnail frame: rounded 12 px; ON = thick marigold-orange ring with a tiny
+check badge; OFF = no ring."
+
+[lock_pro]  200x200 - transparent
+"A glossy gold padlock with a small crown on top and a plum shine, for locked Pro
+templates, sits on a translucent plum veil."
+
+[photo_placeholder]  600x600 - transparent
+"A friendly photo-upload illustration: a camera with a flower on it, a polaroid frame
+tilted behind it, a plus sign, soft marigold glow." + GLOBAL TAIL
+
+[section_icons]  each 128x128 transparent: [sec_event] a diya + calendar,
+[sec_template] a paint palette, [sec_photo] a camera, [sec_brand] a name tag,
+[sec_greeting] a speech bubble with a flower. (+ GLOBAL TAIL)
+
+[lang_chip_icons]  each 96x96: [lang_en] a bubble with a plain 'A' shape (no real
+letter, just an abstract mark), [lang_hi] a bubble with an abstract Devanagari-style
+curve, [lang_both] both bubbles overlapping.
+
+[switch_logo]  see [toggle_on]/[toggle_off] in section 5.
+
+================================================================================
+ 9. STATUS VIEW / SHARE  (screen "status": big poster preview + Share to WhatsApp)
+================================================================================
+
+[status_bg]  1080x1920
+"Soft deep-plum to magenta vignette with a gentle spotlight in the middle (where the
+poster sits), faint floating diyas and petals around the edges." + GLOBAL TAIL
+
+[confetti_burst]  1080x1080 - transparent
+"A joyful burst of confetti, streamers and tiny gold stars radiating from the centre,
+colours marigold, rose, teal, plum and cream, transparent background."
+
+[ribbon_ready]  700x160 - transparent
+"A glossy ribbon banner with folded ends in marigold-orange and a gold edge, empty
+for text ('Ready to post')."
+
+[share_icon]  160x160 - transparent: a paper-plane / upload arrow leaving a rounded
+card, plum with a gold spark.
+
+[whatsapp_tip]  800x360 - transparent
+"A simple friendly 3-step infographic panel: poster card -> share arrow -> a green
+status ring around a circle (no logos, no text). Cute, clear." + GLOBAL TAIL
+
+================================================================================
+ 10. SWAGATAM PRO / PAYWALL  (screen "pro")
+================================================================================
+
+[pro_bg]  1080x1920
+"Royal deep-plum background with radiating gold light rays from the top centre, a
+sprinkle of gold sparkles and marigold petals, a soft vignette. EMPTY ZONE: lower 55%
+for plan cards." + GLOBAL TAIL
+
+[pro_crown]  900x900 - transparent (hero)
+"A big glossy golden crown encrusted with rubies and emeralds, wrapped with a marigold
+garland, floating above a lotus, rays and sparkles behind." + GLOBAL TAIL
+
+[plan_card_on / plan_card_off]  1000x220 - transparent rounded
+"Plan option card. ON: warm cream with a thick marigold-orange border and soft glow.
+OFF: white with a sand border."
+
+[plan_ribbon_best]  400x110 - transparent: a diagonal 'best value' corner ribbon in
+rose-red with a gold star, empty for text.
+
+[tick_icon]  96x96 - transparent: a round green (#12a38a) badge with a bold white tick.
+
+[radio_on / radio_off]  96x96 - transparent: orange filled dot-in-ring / empty sand ring.
+
+================================================================================
+ 11. DIALOG SHEETS  (confirm Log out / Clear data / Remove status / Add event)
+================================================================================
+
+[sheet_handle]  200x40 - transparent: a small rounded grey-mauve grab handle.
+
+[dlg_logout]  400x400 - transparent: a cute door character waving goodbye with a
+heart. (+ GLOBAL TAIL)
+[dlg_clear]   400x400 - transparent: a sweet little dustbin character holding a
+broom, a few sparkles. (+ GLOBAL TAIL)
+[dlg_remove]  400x400 - transparent: a poster card being gently set down in a basket
+with a sad-but-cute face. (+ GLOBAL TAIL)
+[dlg_add]     400x400 - transparent: a calendar page with a glowing plus and a
+confetti pop. (+ GLOBAL TAIL)
+
+[btn_danger]  900x180 - transparent pill: rose-red (#d6336c) with a soft gloss.
+[btn_ghost]   900x180 - transparent pill: white with a sand border.
+
+================================================================================
+ 12. NOTIFICATION / REMINDER
+================================================================================
+[notif_large]  512x512 - transparent
+"A marigold flower on a rounded plum tile with a tiny bell, for the large notification
+icon." + GLOBAL TAIL
+[notif_banner]  1024x512 - opaque
+"Rich festive banner for an expanded notification: plum-to-orange gradient, a garland
+across the top, a diya glowing on the right, EMPTY ZONE left 55% for 'Your status is
+ready'." + GLOBAL TAIL
+
+================================================================================
+ 13. THE POSTERS THEMSELVES  (1080x1920 output, drawn by the app in code today)
+================================================================================
+The app composes: background plate + hero art (or the user's photo) + title +
+wish line + brand footer. Plates below replace the code-drawn backgrounds. All
+plates have NO text and keep the ZONES EMPTY (measured on the 1080x1920 canvas).
+Colours should be easy to recolour: produce each plate in a neutral warm-white/gold
+version too ("_mono") so the app can tint it per festival.
+
+[plate_marigold]  1080x1920   (free template 1)
+"Vertical festive gradient plate, a thick marigold garland swagging across the top
+edge (y 0-140) with hanging strands, concentric mandala rings (white, 10% opacity)
+centred at x540 y700, drifting sparkles. EMPTY ZONES: circle at centre (x540 y700,
+radius 300) for the photo/hero art; band y1040-1660 for the title and wish; rounded
+footer slot x60 y1690, 960x180."
+
+[plate_frame]  1080x1920   (free template 2 - Gold Frame)
+"Warm cream paper (#fff8ec) with an ornate double gold border (outer 10 px gold, inner 3
+px) and small filigree corner flourishes, a tiny mandala medallion at the top centre
+(y150). EMPTY ZONES: rounded square x150 y270, 780x780 (photo/hero, gold inner frame);
+title band y1090-1660; footer slot x90 y1690, 900x170."
+
+[plate_split]  1080x1920   (free template 3 - Bold Split)
+"A dynamic diagonal split: the top area (polygon from top-left to y1040 at the right
+and y1250 at the left) is empty for a photo; a bold accent stripe 50 px wide runs along
+the diagonal edge; the lower area is a rich gradient with faint confetti. EMPTY ZONES:
+the whole top polygon; round badge slot at x900 y1080 (r100); left-aligned title band
+y1310-1700; footer line at y1730."
+
+[plate_royal]  1080x1920   (Pro template 4)
+"Dark royal plate: near-black plum, ornate gold filigree double border with corner
+arcs, a huge faint gold mandala behind the centre, a ring of tiny gold dots at radius
+338 around x540 y700, gold sparkles. EMPTY ZONES: circle x540 y700 r290; title band
+y1060-1650; footer slot x100 y1690, 880x160 (translucent dark with a gold edge)."
+
+[plate_pop]  1080x1920   (Pro template 5 - Pop Art)
+"Playful pop-art plate: bright accent colour with diagonal stripes in a lighter tint,
+scattered confetti pieces and dots, a giant offset circle (r500) at x540 y720 with a
+hard darker shadow. EMPTY ZONES: slightly tilted polaroid slot 640x760 at x540 y700;
+title band y1110-1660; white pill footer slot x60 y1700, 960x160."
+
+[plate_arch]  1080x1920   (Pro template 6 - Floral Arch)
+"Soft pastel plate: light tinted gradient, big faint circles in the corners, a tall
+arched window (width 700 from x190 to x890, round top radius 350 at y510, bottom y1090)
+framed by two thin translucent outer arches, a row of cheerful flowers along its base
+at y1100. EMPTY ZONES: the arch interior (photo/hero); title band y1190-1650; white
+footer slot x70 y1695, 940x170."
+
+POSTER DECORATION OVERLAYS (transparent PNGs, 1080 wide unless noted)
+[deco_garland_hanging]  200x700   "A hanging string of marigold flowers with a gold
+                                    tassel at the bottom, tied at the top." (already
+                                    used; generate more colours: rose, jasmine-white, mango-leaf)
+[deco_lantern_pair]     300x800   "Two ornate hanging paper lanterns (red-orange with gold
+                                    trim) on thin ropes, a small diya glowing inside." REAL ALPHA!
+[deco_bunting]          1080x220  "A triangular festival bunting flag string in saffron, rose,
+                                    teal, plum, with tiny gold tassels. Seamless."
+[deco_toran_mango]      1080x260  "A mango-leaf and marigold toran across a doorway."
+[deco_rangoli_corner]   520x520   "A colourful rangoli quarter-circle with dots and petals,
+                                    for a bottom or top corner."
+[deco_diya_row]         1080x200  "A row of seven lit diyas of mixed sizes, warm glow."
+[deco_petals]           1080x1920 "Scattered marigold and rose petals drifting down, mostly
+                                    near the edges, transparent in the middle."
+[deco_sparkles]         1080x1920 "Gold four-point sparkles of varied sizes, sparse."
+[deco_mandala_ring]     1080x1080 "A fine white mandala ring, 10% opacity look, concentric."
+[deco_confetti]         1080x1920 "Party confetti and streamers, colourful, sparse in the centre."
+[deco_fireworks]        1080x1080 "Three overlapping golden-and-rose firework bursts."
+[deco_colour_splash]    1080x1080 "A vibrant Holi powder splash cloud in pink, yellow, blue,
+                                    green with floating specks." (Holi)
+[deco_crescent_stars]   900x900   "A glowing crescent moon with a few stars and a hanging
+                                    lantern." (Eid)
+[deco_snow]             1080x1920 "Soft snowflakes and tiny stars, sparse." (Christmas)
+[deco_kites]            1080x1080 "Five colourful kites with curling strings." (Sankranti)
+[deco_tricolour_ribbon] 1080x300  "A flowing saffron, white and green ribbon with a faint
+                                    chakra pattern." (Republic / Independence Day)
+[deco_ribbon_corner]    400x400   "A gold ribbon corner flourish for a poster edge."
+(+ GLOBAL TAIL on each)
+
+================================================================================
+ FILE / KEY CHECKLIST
+================================================================================
+Screens ....... auth_bg, toran, auth_mascot, sheet_edge, btn_primary, field_frame,
+                offer_header, offer_icon_{posters,schedule,brand,language},
+                offer_bg_corners, setup_header, type_{personal,business}_icon,
+                type_btn_{on,off}, home_bg, avatar_frame, badge_{pro,trial,free},
+                holiday_card_bg(x4), today_banner, empty_home, nav_{home,calendar,
+                profile}_{on,off}, nav_bar_bg, list_header, chip_{on,off},
+                toggle_{on,off}, row_card, add_event_card, ev_* (10), cal_header,
+                cal_{day,day_sel,day_today,dot_event,dot_set,empty}, arrow_{prev,
+                next}, profile_bg, avatar_big_frame, plan_card_bg, logo_placeholder,
+                btn_{logout,clear}_icon, time_icon, phone_frame, tpl_card_{on,off},
+                lock_pro, photo_placeholder, sec_* (5), lang_* (3), status_bg,
+                confetti_burst, ribbon_ready, share_icon, whatsapp_tip, pro_bg,
+                pro_crown, plan_card_{on,off}, plan_ribbon_best, tick_icon,
+                radio_{on,off}, sheet_handle, dlg_{logout,clear,remove,add},
+                btn_{danger,ghost}, notif_{icon,large,banner}, app_icon,
+                app_icon_foreground, logo_mark, splash
+Posters ....... plate_{marigold,frame,split,royal,pop,arch}, deco_* (17)
+Festival art .. hero_<festival-id> for every festival not marked done (32 prompts)
+
+Sizes: full-screen 1080x1920, icons 256 or 512 square, heroes 1024. Keep every
+transparent asset's subject centred with ~6% padding. Deliver PNG; I convert to WebP.
+================================================================================
