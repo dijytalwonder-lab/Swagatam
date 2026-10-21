@@ -93,6 +93,9 @@ public class MainActivity extends BridgeActivity {
             @JavascriptInterface public void statusIcons(final boolean dark) {
                 runOnUiThread(new Runnable() { public void run() { bars.setAppearanceLightStatusBars(dark); } });
             }
+            @JavascriptInterface public void navIcons(final boolean dark) {
+                runOnUiThread(new Runnable() { public void run() { bars.setAppearanceLightNavigationBars(dark); } });
+            }
         }, "SwInsets");
 
         ViewCompat.setOnApplyWindowInsetsListener(web, (v, insets) -> {

@@ -9,6 +9,7 @@ import { sendOtp, verifyOtp, validMobile } from './auth.js';
 import { scheduleReminders, notificationsAllowed, onNotificationTap, sharePoster } from './platform.js';
 import { esc, icons, toran, logo, toast, busy, openSheet, closeSheet, confirmSheet } from './ui.js';
 import { PLANS, DEMO_OTP, DEMO_AUTH, DEMO_BILLING, TAGLINE } from './config.js';
+import { getMode, setMode, isDark, onThemeChange, initTheme } from './theme.js';
 
 const app = document.getElementById('app');
 const ui = { auth: { step: 'phone', mobile: '' }, filter: 'all', cal: null, plan: 'year', emoji: '🎉', ptype: 'business' };
@@ -22,6 +23,7 @@ const hhmm12 = (t) => { const [h, m] = (t || '07:30').split(':').map(Number); re
 
 const icon = (f) => (f.art ? `<img class="ficon" src="${artUrl(f.art)}" alt="" loading="lazy">` : f.emoji);
 const posterUser = () => ({ ...state.user, brand: brandOf(state.user) });
+const themeSeg = () => { const m = getMode(); const b = (v, l) => `<button class="${m === v ? 'on' : ''}" data-act="setTheme" data-v="${v}">${l}</button>`; return `<div class="seg seg3" style="margin-bottom:0">${b('auto', '🌗 Auto')}${b('light', '☀️ Light')}${b('dark', '🌙 Dark')}</div>`; };
 const typeSeg = (biz) => `<div class="seg"><button class="${biz ? '' : 'on'}" data-act="setType" data-v="personal">👤 Personal</button><button class="${biz ? 'on' : ''}" data-act="setType" data-v="business">🏪 Business</button></div>`;
 
 // ---------- plan label ----------
@@ -146,6 +148,7 @@ const screens = {
     return {
       html: `<div class="screen hasnav"><div class="profhead"><div class="avatar" data-avatar>${esc((brandOf(u) || '?').charAt(0).toUpperCase())}</div><h2>${esc(brandOf(u))}</h2><span class="hint">+91 ${esc(u.mobile)}</span></div>
         <div class="planbox"><h3>${planText}</h3><p>${planSub}</p><button class="btn primary" data-act="gotoPro">${isPro() && !onTrial() ? 'Manage plan' : 'See Pro plans'}</button></div>
+        <div class="card"><h4>Appearance <small>${getMode() === 'auto' ? 'Follows your phone' : getMode() === 'dark' ? 'Dark theme' : 'Light theme'}</small></h4>${themeSeg()}</div>
         <div class="card"><h4>Your details</h4>${typeSeg(biz)}
           <label class="field"><span>Your name</span><input class="input" data-bind="uname" value="${esc(u.name)}" maxlength="40" autocapitalize="words"></label>
           <label class="field" id="brandField" style="${biz ? '' : 'display:none'}"><span>Brand name</span><input class="input" data-bind="ubrand" value="${esc(u.brand)}" maxlength="40" autocapitalize="words"></label>
@@ -298,7 +301,7 @@ function render(keepScroll = false) {
   app.innerHTML = out.html;
   if (keepScroll && key === lastKey && app.firstElementChild) app.firstElementChild.classList.add('noanim');
   lastKey = key; window.scrollTo(0, y);
-  try { if (window.SwInsets && window.SwInsets.statusIcons) window.SwInsets.statusIcons(name !== 'auth'); } catch (e) { /* not on Android */ }
+  syncChrome(name);
   if (out.after) out.after();
 }
 const refresh = () => render(true);
@@ -436,6 +439,7 @@ const actions = {
     grantPro(p.days); save(); toast('Pro unlocked. Thank you!'); history.length > 1 ? history.back() : goReplace('#/home');
   },
 
+  setTheme(d) { setMode(d.v); refresh(); },
   async logout() {
     const mobile = state.user.mobile;
     if (!(await confirmSheet('Log out?', `Your statuses stay saved on this phone. Sign in again with +91 ${mobile} to get them back.`, 'Log out'))) return;
@@ -490,6 +494,15 @@ window.addEventListener('hashchange', () => { closeSheet(); render(); });
 document.addEventListener('focusin', (e) => { if (e.target.matches && e.target.matches('input, textarea')) setTimeout(() => e.target.scrollIntoView({ block: 'center', behavior: 'smooth' }), 320); });
 
 // ---------- boot ----------
+// Android system-bar icons: dark icons on light screens, light icons on dark screens (the sign-in hero is always dark at the top)
+function syncChrome(name) {
+  try {
+    const bar = window.SwInsets; if (!bar) return;
+    if (bar.statusIcons) bar.statusIcons(!isDark() && name !== 'auth');
+    if (bar.navIcons) bar.navIcons(!isDark());
+  } catch (e) { /* not on Android */ }
+}
+
 function applyInsets(top, bottom, kb) {
   const r = document.documentElement.style; r.setProperty('--sat', top + 'px'); r.setProperty('--sab', bottom + 'px'); r.setProperty('--kb', kb + 'px');
 }
@@ -497,6 +510,8 @@ window.__setInsets = applyInsets;   // Android's MainActivity pushes system-bar 
 try { if (window.SwInsets) { const [t, b, k] = window.SwInsets.get().split(',').map(Number); applyInsets(t, b, k); } } catch (e) { /* ignore */ }
 
 async function boot() {
+  initTheme();
+  onThemeChange(() => syncChrome(parseHash()[0]));
   app.innerHTML = `<div class="screen dark-screen splash">${logo()}<h1>Swagatam</h1><div class="tag">${TAGLINE}</div></div>`;
   await Promise.all([ensureFonts(), new Promise((r) => setTimeout(r, 1100))]);
   render();
