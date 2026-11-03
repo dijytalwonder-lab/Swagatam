@@ -2,9 +2,9 @@
 import { artUrl, dateFor, nextDate, occurrences, fmtDate, whenLabel, startOfDay, daysBetween, ymd, parseYmd, isLunar } from './festivals.js';
 import {
   state, save, resetAll, allFestivals, getFestival, addCustom, removeCustom, defaultSet, getSet, putSet, dropSet,
-  isPro, onTrial, trialDaysLeft, startTrial, grantPro, effective, FREE_TEMPLATES, TRIAL_DAYS, blobs, getImage, shrink, brandOf, isBusiness, getArt, getDecor,
+  isPro, onTrial, trialDaysLeft, startTrial, grantPro, effective, FREE_TEMPLATES, TRIAL_DAYS, blobs, getImage, shrink, brandOf, isBusiness, getArt, getDecor, loadSkin,
 } from './store.js';
-import { renderPoster, ensureFonts, TEMPLATES } from './poster.js';
+import { renderPoster, ensureFonts, templatesFor } from './poster.js';
 import { sendOtp, verifyOtp, validMobile } from './auth.js';
 import { scheduleReminders, notificationsAllowed, onNotificationTap, sharePoster } from './platform.js';
 import { esc, icons, logo, toast, busy, openSheet, closeSheet, confirmSheet } from './ui.js';
@@ -172,7 +172,7 @@ const screens = {
     const f = getFestival(id); if (!f) { location.replace('#/home'); return { html: '' }; }
     if (!draft || draft.fid !== id) draft = newDraft(f);
     const s = draft.set, custom = f.kind === 'custom', pro = isPro();
-    const tpls = TEMPLATES.map((t, i) => { const locked = i >= FREE_TEMPLATES && !pro; return `<button class="tpl ${s.template === i ? 'on' : ''}" data-act="pickTpl" data-i="${i}"><div class="t" data-tpl="${i}">${locked ? '<div class="lock">🔒</div>' : ''}</div>${t.name}${i >= FREE_TEMPLATES ? ' <span class="pro-tag">PRO</span>' : ''}</button>`; }).join('');
+    const tpls = templatesFor(f.id).map((t, i) => { const locked = i >= FREE_TEMPLATES && !pro; return `<button class="tpl ${s.template === i ? 'on' : ''}" data-act="pickTpl" data-i="${i}"><div class="t" data-tpl="${i}">${locked ? '<div class="lock">🔒</div>' : ''}</div>${t.name}${i >= FREE_TEMPLATES ? ' <span class="pro-tag">PRO</span>' : ''}</button>`; }).join('');
     const lang = (v, l) => `<button class="chip ${s.lang === v ? 'on' : ''}" data-act="setLang" data-v="${v}">${l}</button>`;
     return {
       html: `<div class="screen">${topbar(`Set status`)}
@@ -200,7 +200,7 @@ const screens = {
   status(id) {
     const f = getFestival(id), set = getSet(id);
     if (!f || !set) { location.replace('#/home'); return { html: '' }; }
-    const d = nextDate(f, today(), set.overrides), t = TEMPLATES[effective(set).template];
+    const d = nextDate(f, today(), set.overrides), t = templatesFor(f.id)[effective(set).template] || templatesFor(f.id)[0];
     return {
       html: `<div class="screen">${topbar(f.name)}
         <div class="bigpv" id="bigpv"></div>
@@ -218,7 +218,7 @@ const screens = {
     const sel = PLANS.find((p) => p.id === ui.plan) || PLANS[1];
     return { html: `<div class="screen">${topbar('Swagatam Pro')}
       <div class="pad"><h1 style="font-size:32px;margin:6px 0 4px">Make every status yours ✨</h1><p class="hint" style="margin-bottom:16px;font-size:16px">${onTrial() ? `Your free trial has ${trialDaysLeft()} day${trialDaysLeft() === 1 ? '' : 's'} left.` : 'Unlock everything and keep your scheduled statuses looking their best.'}</p>
-      <ul class="ticks"><li>All ${TEMPLATES.length} designs, plus every new one we add</li><li>Your own logo on every status</li><li>Everything you've scheduled keeps working</li></ul>
+      <ul class="ticks"><li>Every design, plus every new one we add</li><li>Your own logo on every status</li><li>Everything you've scheduled keeps working</li></ul>
       ${PLANS.map((p) => `<button class="plan ${p.id === sel.id ? 'on' : ''}" data-act="selectPlan" data-id="${p.id}"><span class="radio"></span><div><b>${p.name}</b><small>${p.sub}</small></div><span class="price">₹${p.price}</span></button>`).join('')}
       </div><div class="bottombar"><button class="btn primary" data-act="buyPlan" data-id="${sel.id}">Unlock Pro · ₹${sel.price}</button>${DEMO_BILLING ? '<div class="hint">Preview build: no payment is taken yet.</div>' : ''}</div></div>` };
   },
@@ -231,8 +231,16 @@ function newDraft(f) {
   return { fid: f.id, isNew: !existing, set, name: f.name, date: d ? ymd(d) : '', pic: null, picBlob: null, picUrl: '', picDirty: false, logo: null, tpl: [] };
 }
 
+// the festival's full-poster pictures (only the one this status uses, unless `only` is left out = all of them, for the template thumbnails)
+async function skinMap(f, only) {
+  const out = {};
+  await Promise.all(templatesFor(f.id).map(async (t, i) => { if (t.skin && (only == null || only === i)) { const img = await loadSkin(t.skin); if (img) out[t.skin.id] = img; } }));
+  return out;
+}
+
 async function posterOpts(f, set) {
-  return { festival: f, set: effective(set), user: posterUser(), pic: set.hasPic ? await getImage('pic:' + f.id) : null, logo: await getImage('logo'), art: await getArt(f), decor: await getDecor(f) };
+  const eff = effective(set);
+  return { festival: f, set: eff, user: posterUser(), pic: set.hasPic ? await getImage('pic:' + f.id) : null, logo: await getImage('logo'), art: await getArt(f), decor: await getDecor(f), skins: await skinMap(f, eff.template) };
 }
 
 async function hydrateThumbs() {
@@ -255,7 +263,7 @@ async function hydrateLogoThumb() {
 
 function draftOpts() {
   const f = getFestival(draft.fid);
-  return { festival: { ...f, name: draft.name || f.name }, set: effective({ ...draft.set, hasPic: !!draft.pic }), user: posterUser(), pic: draft.pic, logo: draft.logo, art: draft.art, decor: draft.decor };
+  return { festival: { ...f, name: draft.name || f.name }, set: effective({ ...draft.set, hasPic: !!draft.pic }), user: posterUser(), pic: draft.pic, logo: draft.logo, art: draft.art, decor: draft.decor, skins: draft.skins };
 }
 function refreshPreview() {
   const el = document.getElementById('pv'); if (!el || !draft) return;
@@ -270,7 +278,7 @@ function drawTemplateThumbs() {
 function cloneCanvas(c) { const n = document.createElement('canvas'); n.width = c.width; n.height = c.height; n.getContext('2d').drawImage(c, 0, 0); return n; }
 async function buildTemplateThumbs() {
   const o = draftOpts();
-  draft.tpl = TEMPLATES.map((_, i) => renderPoster({ ...o, set: { ...o.set, template: i } }, 0.14));
+  draft.tpl = templatesFor(draft.fid).map((_, i) => renderPoster({ ...o, set: { ...o.set, template: i } }, 0.14));
   drawTemplateThumbs();
 }
 async function hydrateConfig() {
@@ -278,7 +286,7 @@ async function hydrateConfig() {
   if (!draft.loaded) {
     draft.loaded = true;
     draft.logo = await getImage('logo'); state.user.hasLogo = !!draft.logo;
-    { const f = getFestival(draft.fid); draft.art = await getArt(f); draft.decor = await getDecor(f); }
+    { const f = getFestival(draft.fid); draft.art = await getArt(f); draft.decor = await getDecor(f); draft.skins = await skinMap(f); }
     if (!draft.picBlob && draft.set.hasPic) { draft.picBlob = await blobs.get('pic:' + draft.fid); }
     if (draft.picBlob && !draft.pic) { draft.picUrl = URL.createObjectURL(draft.picBlob); draft.pic = await getImage('pic:' + draft.fid); }
     refresh(); return;

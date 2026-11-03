@@ -1,6 +1,7 @@
 // Poster renderer: draws a 1080x1920 (WhatsApp status size) greeting on a <canvas>.
 // renderPoster() can draw at any scale, so the same code makes list thumbnails, live previews and the shared file.
 import { wishFor } from './festivals.js';
+import { SKINS } from './skins.js';
 
 export const W = 1080, H = 1920;
 
@@ -322,6 +323,69 @@ const templates = {
   },
 };
 
+// ---------- festival artwork skins (see skins.js) ----------
+/** The templates on offer for one festival: the six built-ins (a built-in is replaced by that festival's picture when it has one), then extra pictures. */
+export function templatesFor(festivalId) {
+  const skins = SKINS[festivalId] || [], out = TEMPLATES.map((t) => ({ ...t })), extras = [];
+  for (const t of out) {
+    const mine = skins.filter((s) => s.tpl === t.id);
+    if (!mine.length) continue;
+    const prime = mine.find((s) => s.primary) || mine[0]; t.skin = prime;
+    mine.filter((s) => s !== prime).forEach((s, i) => extras.push({ id: s.id, name: s.name || `${t.name} ${i + 2}`, free: false, skin: s }));
+  }
+  return out.concat(extras);
+}
+
+function coverFull(ctx, img) {
+  const s = Math.max(W / img.width, H / img.height), iw = img.width * s, ih = img.height * s;
+  ctx.drawImage(img, (W - iw) / 2, (H - ih) / 2, iw, ih);
+}
+
+function scrimFx(ctx, sc) {
+  if (sc.grad) {
+    const g = sc.grad, c = g.c.join(','), lg = ctx.createLinearGradient(0, g.y0, 0, g.y1);
+    lg.addColorStop(0, `rgba(${c},${g.a0})`); lg.addColorStop(1, `rgba(${c},${g.a1})`);
+    ctx.fillStyle = lg; ctx.fillRect(0, g.y0, W, H - g.y0);
+  }
+  if (sc.ellipse) {
+    const [cx, cy, rx, ry, col, a] = sc.ellipse, c = col.join(',');
+    ctx.save(); ctx.translate(cx, cy); ctx.scale(rx, ry);
+    const rg = ctx.createRadialGradient(0, 0, 0, 0, 0, 1); rg.addColorStop(0, `rgba(${c},${a})`); rg.addColorStop(0.6, `rgba(${c},${a * 0.8})`); rg.addColorStop(1, `rgba(${c},0)`);
+    ctx.fillStyle = rg; ctx.fillRect(-1, -1, 2, 2); ctx.restore();
+  }
+}
+
+// the user's photo (or the festival emblem) in a ringed circle
+function medallion(ctx, d, p) {
+  ctx.save(); ctx.shadowColor = 'rgba(0,0,0,.4)'; ctx.shadowBlur = 26; ctx.shadowOffsetY = 8; ctx.fillStyle = '#000'; ctx.beginPath(); ctx.arc(p.cx, p.cy, p.r, 0, Math.PI * 2); ctx.fill(); ctx.restore();
+  media(ctx, d, circlePath(ctx, p.cx, p.cy, p.r), p.cx - p.r, p.cy - p.r, p.r * 2, p.r * 2);
+  ring(ctx, p.cx, p.cy, p.r, p.ring || '#fff', p.ringW || 14);
+}
+
+// the user's own line on a picture that already carries its own words: a pill that sits just above the brand card
+function messagePill(ctx, text, o, limit) {
+  const size = 40, maxW = o.maxW || 800; ctx.font = `600 ${size}px ${FONT}`;
+  let lines = wrapLines(ctx, text, maxW - 90); if (lines.length > 3) { lines = lines.slice(0, 3); lines[2] = lines[2].replace(/\s*\S*$/, '') + '…'; }
+  const lh = size * 1.25, h = lines.length * lh + 40, w = Math.min(maxW, Math.max(...lines.map((l) => ctx.measureText(l).width)) + 90), x = (W - w) / 2, y = (o.bottom ?? limit - 26) - h;
+  ctx.save(); ctx.shadowColor = 'rgba(0,0,0,.3)'; ctx.shadowBlur = 20; ctx.shadowOffsetY = 6; ctx.fillStyle = o.bg || '#fff'; rr(ctx, x, y, w, h, Math.min(46, h / 2)); ctx.fill(); ctx.restore();
+  if (o.stroke) { ctx.save(); ctx.strokeStyle = o.stroke; ctx.lineWidth = 4; rr(ctx, x, y, w, h, Math.min(46, h / 2)); ctx.stroke(); ctx.restore(); }
+  ctx.fillStyle = o.fg || '#222'; ctx.textAlign = 'center'; ctx.textBaseline = 'alphabetic';
+  lines.forEach((l, i) => ctx.fillText(l, W / 2, y + 20 + lh * i + size * 0.95));
+}
+
+function drawSkin(ctx, d, sk, img) {
+  coverFull(ctx, img);
+  for (const s of sk.scrim || []) scrimFx(ctx, s);
+  if (sk.photo && (d.pic || sk.photo.always)) medallion(ctx, d, sk.photo);
+  if (sk.baked) { if (d.custom) messagePill(ctx, d.wish, sk.msg || {}, sk.brand.y); }
+  else {
+    const lay = (d.pic && sk.layP) || sk.lay, w = lay.wish || {};
+    const y = textBlock(ctx, d, { ...lay.text, color: sk.ink, kicker: sk.kicker, hiColor: sk.hi, shadow: sk.shadow });
+    wishText(ctx, d.wish, { x: w.x, y: y + 10, bottom: w.bottom, maxW: w.maxW || 800, color: sk.wishInk, size: w.size });
+  }
+  footerCard(ctx, d, sk.brand);
+}
+
 // ---------- public API ----------
 function fmtPhone(m) { const s = String(m || '').replace(/\D/g, '').slice(-10); return s.length === 10 ? `+91 ${s.slice(0, 5)} ${s.slice(5)}` : ''; }
 
@@ -332,7 +396,7 @@ function contentFor(o) {
   return {
     p: f.p, emoji: f.emoji, chakra: f.p[0] === '#ff9933', seed: f.id,
     kicker, main, hi: s.lang === 'both' && hasHi ? f.hi : '',
-    wish: (s.message || '').trim() || (s.lang === 'hi' && hasHi ? wish.hi : wish.en),
+    wish: (s.message || '').trim() || (s.lang === 'hi' && hasHi ? wish.hi : wish.en), custom: !!(s.message || '').trim(),
     brand: u.brand || u.name || 'Your brand', name: u.name || '',
     phone: s.showPhone ? fmtPhone(u.mobile) : '',
     pic: o.pic || null, logo: s.useLogo ? o.logo || null : null,
@@ -348,13 +412,13 @@ function hanging(ctx, img) {
   ctx.restore();
 }
 
-/** o = { festival, set (already passed through effective()), user, pic?, logo?, art?, decor?: Image }. Returns a canvas. */
+/** o = { festival, set (already passed through effective()), user, pic?, logo?, art?, decor?: Image, skins?: { [skinId]: Image } }. Returns a canvas. */
 export function renderPoster(o, scale = 1) {
   const c = document.createElement('canvas'); c.width = Math.round(W * scale); c.height = Math.round(H * scale);
   const ctx = c.getContext('2d'); ctx.scale(scale, scale);
-  const fn = templates[TEMPLATES[o.set.template]?.id] || templates.marigold;
-  const d = contentFor(o);
-  fn(ctx, d);
-  if (d.decor) hanging(ctx, d.decor);
+  const list = templatesFor(o.festival.id), t = list[o.set.template] || list[0];
+  const d = contentFor(o), img = t.skin && o.skins && o.skins[t.skin.id];
+  if (img) drawSkin(ctx, d, t.skin, img);
+  else { (templates[t.id] || templates.marigold)(ctx, d); if (d.decor) hanging(ctx, d.decor); }   // no picture for this festival (or it failed to load): the built-in drawing
   return c;
 }

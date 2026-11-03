@@ -1,0 +1,35 @@
+<!doctype html><html><head><meta charset="utf-8"><title>skins test</title>
+<link rel="stylesheet" href="css/fonts.css">
+<style>body{margin:0;background:#222;color:#ddd;font:12px sans-serif}#g{display:flex;flex-wrap:wrap;gap:6px;padding:6px}.c{width:270px}.c canvas{display:block;width:270px;height:480px}</style></head>
+<body><div id="g"></div>
+<script type="module">
+import { renderPoster, ensureFonts, templatesFor } from './js/poster.js';
+import { FESTIVALS } from './js/festivals.js';
+import { skinUrl } from './js/skins.js';
+const q = new URLSearchParams(location.search);
+const fid = q.get('f') || 'new-year', photo = q.get('photo') === '1', from = +(q.get('from') || 0), to = +(q.get('to') || 99), scale = +(q.get('scale') || 0.25);
+const festival = FESTIVALS.find((f) => f.id === fid);
+const li = (src) => new Promise((res) => { const i = new Image(); i.onload = () => res(i); i.onerror = () => res(null); i.src = src; });
+function portrait() {
+  const c = document.createElement('canvas'); c.width = 600; c.height = 800; const x = c.getContext('2d');
+  const g = x.createLinearGradient(0, 0, 0, 800); g.addColorStop(0, '#6aa6d8'); g.addColorStop(1, '#2b5f8f'); x.fillStyle = g; x.fillRect(0, 0, 600, 800);
+  x.fillStyle = '#2d2a3a'; x.beginPath(); x.ellipse(300, 820, 280, 300, 0, 0, 7); x.fill();
+  x.fillStyle = '#e0ac84'; x.beginPath(); x.arc(300, 340, 150, 0, 7); x.fill();
+  x.fillStyle = '#1b1b24'; x.beginPath(); x.arc(300, 290, 150, Math.PI, 0); x.fill();
+  return li(c.toDataURL());
+}
+await ensureFonts();
+const pic = photo ? await portrait() : null;
+const list = templatesFor(fid);
+const g = document.getElementById('g');
+for (let i = from; i < Math.min(list.length, to + 1); i++) {
+  const t = list[i], skins = {}; if (t.skin) { const im = await li(skinUrl(t.skin.id)); if (im) skins[t.skin.id] = im; }
+  const set = { template: i, lang: q.get('lang') || 'both', message: q.get('msg') || '', showPhone: true, useLogo: false };
+  const user = { name: 'Anil Sharma', brand: q.get('brand') || 'Sharma Sweets & Gifts', mobile: '9876543210', type: 'business' };
+  const d = document.createElement('div'); d.className = 'c';
+  d.appendChild(renderPoster({ festival, set, user, pic, skins }, scale));
+  const l = document.createElement('div'); l.textContent = i + ' ' + t.name + (t.skin ? (t.skin.tuned ? '' : ' (generic)') : ' (built-in)'); d.appendChild(l);
+  g.appendChild(d);
+}
+document.title = 'done';
+</script></body></html>

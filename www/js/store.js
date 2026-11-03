@@ -1,5 +1,6 @@
 // App state (localStorage) + image blobs (IndexedDB) + plan helpers.
 import { FESTIVALS, artUrl } from './festivals.js';
+import { skinUrl } from './skins.js';
 
 const KEY = 'swagatam.v1';
 const DAY = 86400000;
@@ -130,3 +131,10 @@ function loadArt(name) {
 }
 export const getArt = (f) => loadArt(f && f.art);
 export const getDecor = (f) => loadArt(f && f.decor);
+
+// a festival's full-poster artwork (skins.js); null when the file cannot be read, and the poster then falls back to the built-in drawing
+const skinCache = new Map();
+export function loadSkin(skin) {
+  if (!skinCache.has(skin.id)) skinCache.set(skin.id, loadImage(skinUrl(skin.id)).catch(() => null));
+  return skinCache.get(skin.id);
+}
