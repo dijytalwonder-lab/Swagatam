@@ -116,6 +116,34 @@ textarea.input { height: 86px; padding: 12px 16px; resize: none; line-height: 1.
 .sheetcard { background: var(--sheet); color: var(--ink); border-radius: 32px 32px 0 0; padding: 26px 22px calc(26px + var(--sab)); box-shadow: 0 -10px 40px rgba(0,0,0,.25); }
 .sheetcard h2 { font-size: 24px; margin-bottom: 4px; }
 .sheetcard .hint { margin-bottom: 16px; }
+/* sign-in: the festive welcome art (sliced from assets/Festive Diwali Welcome Screen.png by scripts/prepare-welcome.js)
+   with a live card in the middle. Always plum, in both themes. --u is 1% of the app width, so everything scales with the art. */
+.auth { --w: min(100vw, 480px); --u: calc(var(--w) / 100); color-scheme: dark; color: #fff; padding: 0 0 var(--kb); background: #3a013d url(../img/welcome-strip.png) 0 0 / 100% 100% no-repeat; }
+.auth .art { display: block; flex: none; width: 100%; height: auto; user-select: none; -webkit-user-drag: none; pointer-events: none; }
+.art-gap { flex: 1 0 0; }
+.authcard { position: relative; flex: none; margin: 0 calc(var(--u) * 3.4); padding: calc(var(--u) * 5.2) calc(var(--u) * 6.2) calc(var(--u) * 4.4); border-radius: calc(var(--u) * 6.2); border: 1.5px solid transparent;
+  background: radial-gradient(60% 24% at 50% 0%, rgba(170, 40, 95, .5), transparent) padding-box, radial-gradient(45% 15% at 50% 100%, rgba(190, 40, 55, .38), transparent) padding-box,
+    linear-gradient(#4a044a, #3d023c) padding-box, linear-gradient(180deg, #f98a5b, #d9608a 55%, #ec7550) border-box;
+  box-shadow: 0 0 calc(var(--u) * 2.4) rgba(255, 140, 80, .22); }
+.authcard h2 { font-size: calc(var(--u) * 5.2); line-height: 1.12; margin: 0 0 calc(var(--u) * 1.2); color: #fff; }
+.authcard .hint { font-size: calc(var(--u) * 4); color: #cdb8f4; margin-bottom: calc(var(--u) * 4.2); }
+.authcard .hint b { color: #ffd36b; }
+.authcard .field { margin-bottom: 0; }
+.authcard .field > span { font-size: calc(var(--u) * 3.7); font-weight: 800; color: #c9aef2; margin: 0 0 calc(var(--u) * 1.6) calc(var(--u) * 1); }
+.authcard .input, .authcard .phone .cc { height: max(48px, calc(var(--u) * 12.4)); background: #38013b; border: 1.5px solid; border-color: #890a78 #b50fa0 #c53575 #b50fa0; color: #fff; font-size: calc(var(--u) * 5.1); }
+.authcard .input { border-radius: calc(var(--u) * 4.4); }
+.authcard .phone .cc { padding: 0 calc(var(--u) * 4); border-radius: calc(var(--u) * 4.4) 0 0 calc(var(--u) * 4.4); border-right: 0; }
+.authcard .phone .input { border-radius: 0 calc(var(--u) * 4.4) calc(var(--u) * 4.4) 0; padding-left: calc(var(--u) * 4.6); }
+.authcard .input::placeholder { color: rgba(255, 255, 255, .42); }
+.authcard .input:focus { border-color: #ffb703; box-shadow: 0 0 0 3px rgba(255, 183, 3, .2); }
+.authcard .input:-webkit-autofill { -webkit-text-fill-color: #fff; caret-color: #fff; box-shadow: 0 0 0 100px #38013b inset; }
+.authcard .otp { font-size: calc(var(--u) * 7.2); }
+.authcard .err { color: #ff9db9; font-size: calc(var(--u) * 3.6); min-height: calc(var(--u) * 4.7); margin: calc(var(--u) * 1.4) 4px calc(var(--u) * 1.2); }
+.authcard .btn.primary { min-height: max(48px, calc(var(--u) * 12)); border-radius: 999px; border: 1.5px solid rgba(255, 236, 160, .9); color: #470a45; font-size: calc(var(--u) * 5.4);
+  background: linear-gradient(180deg, #ffe85c, #ffc414 55%, #ffae00); box-shadow: 0 0 calc(var(--u) * 3.4) rgba(255, 190, 40, .42), inset 0 1px 0 rgba(255, 255, 255, .7); }
+.authcard .btn.link { color: #ffcf6a; }
+.kbd .auth .art-orn, .kbd .auth .art-bottom { display: none; }   /* keyboard open: give the card the room */
+@media (min-aspect-ratio: 11/20) { .auth .art-orn { display: none; } }   /* short phones: drop the little ornaments so the card + diyas still fit */
 .splash { align-items: center; justify-content: center; text-align: center; }
 .splash .logo { width: 132px; height: 132px; animation: pop .7s cubic-bezier(.2, 1.4, .4, 1); }
 .splash h1 { font-size: 46px; margin-top: 14px; }

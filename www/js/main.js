@@ -7,7 +7,7 @@ import {
 import { renderPoster, ensureFonts, TEMPLATES } from './poster.js';
 import { sendOtp, verifyOtp, validMobile } from './auth.js';
 import { scheduleReminders, notificationsAllowed, onNotificationTap, sharePoster } from './platform.js';
-import { esc, icons, toran, logo, toast, busy, openSheet, closeSheet, confirmSheet } from './ui.js';
+import { esc, icons, logo, toast, busy, openSheet, closeSheet, confirmSheet } from './ui.js';
 import { PLANS, DEMO_OTP, DEMO_AUTH, DEMO_BILLING, TAGLINE } from './config.js';
 import { getMode, setMode, isDark, onThemeChange, initTheme } from './theme.js';
 
@@ -51,7 +51,7 @@ const screens = {
   auth() {
     const a = ui.auth;
     const body = a.step === 'phone' ? `
-      <h2>Welcome! Let's get you started</h2><p class="hint">Register with your mobile number</p>
+      <h2>Welcome! Let’s get you started</h2><p class="hint">Register with your mobile number</p>
       <label class="field"><span>Mobile number</span><div class="phone"><div class="cc">+91</div><input class="input" id="mobile" type="tel" inputmode="numeric" maxlength="10" placeholder="98765 43210" value="${esc(a.mobile)}" data-enter="sendOtp" autocomplete="tel-national"></div></label>
       <div class="err" id="err"></div>
       <button class="btn primary" data-act="sendOtp">Get OTP</button>` : `
@@ -60,7 +60,14 @@ const screens = {
       ${DEMO_AUTH ? `<p class="hint" style="margin-top:-6px">Demo mode: use code <b>${DEMO_OTP}</b></p>` : ''}
       <div class="err" id="err"></div>
       <button class="btn primary" data-act="verifyOtp">Verify &amp; continue</button>`;
-    return { html: `<div class="screen dark-screen">${toran}<div class="hero">${logo()}<h1>Swagatam</h1><div class="tag">${TAGLINE}</div><div class="welcome">स्वागतम् 🙏</div></div><div class="sheetcard">${body}</div></div>` };
+    // the festive welcome art (garland, logo, title, diyas) is a picture sliced from assets/; the card in the middle is live
+    return { html: `<div class="screen auth">
+      <img class="art art-top" src="img/welcome-top.webp" alt="Swagatam - ${esc(TAGLINE)}" draggable="false">
+      <div class="art-gap"></div>
+      <img class="art art-orn" src="img/welcome-orn.webp" alt="" draggable="false">
+      <div class="authcard">${body}</div>
+      <img class="art art-bottom" src="img/welcome-bottom.webp" alt="" draggable="false">
+    </div>` };
   },
 
   offer() {
@@ -499,12 +506,13 @@ function syncChrome(name) {
   try {
     const bar = window.SwInsets; if (!bar) return;
     if (bar.statusIcons) bar.statusIcons(!isDark() && name !== 'auth');
-    if (bar.navIcons) bar.navIcons(!isDark());
+    if (bar.navIcons) bar.navIcons(!isDark() && name !== 'auth');
   } catch (e) { /* not on Android */ }
 }
 
 function applyInsets(top, bottom, kb) {
   const r = document.documentElement.style; r.setProperty('--sat', top + 'px'); r.setProperty('--sab', bottom + 'px'); r.setProperty('--kb', kb + 'px');
+  document.documentElement.classList.toggle('kbd', kb > 0);   // lets the sign-in art make room while the keyboard is open
 }
 window.__setInsets = applyInsets;   // Android's MainActivity pushes system-bar / keyboard sizes here
 try { if (window.SwInsets) { const [t, b, k] = window.SwInsets.get().split(',').map(Number); applyInsets(t, b, k); } } catch (e) { /* ignore */ }
@@ -513,7 +521,9 @@ async function boot() {
   initTheme();
   onThemeChange(() => syncChrome(parseHash()[0]));
   app.innerHTML = `<div class="screen dark-screen splash">${logo()}<h1>Swagatam</h1><div class="tag">${TAGLINE}</div></div>`;
-  await Promise.all([ensureFonts(), new Promise((r) => setTimeout(r, 1100))]);
+  // decode the sign-in art during the splash so it doesn't pop in
+  const art = ['top', 'orn', 'bottom'].map((n) => { const i = new Image(); i.src = `img/welcome-${n}.webp`; return i.decode().catch(() => {}); });
+  await Promise.all([ensureFonts(), ...art, new Promise((r) => setTimeout(r, 1100))]);
   render();
   onNotificationTap((fid) => { if (state.user && state.user.stage === 'ready' && getSet(fid)) go('#/status/' + fid); });
   scheduleReminders();

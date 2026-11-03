@@ -49,3 +49,4 @@ Notes
 - `www/js/festivals.js` festival data + date rules · `poster.js` canvas templates · `store.js` state, plan, images
 - `www/js/main.js` screens, router, actions · `platform.js` notifications + share · `auth.js`, `config.js`
 - `scripts/setup-android.js`, `build-android.ps1` Android build
+- Sign-in screen: `assets/Festive Diwali Welcome Screen.png` is sliced by `node scripts/prepare-welcome.js` into `www/img/welcome-*.webp`; the card in the middle is live HTML (`.authcard` in `css/app.css`). Swap the PNG (same 887×1774 layout) and re-run the script to change the look.
